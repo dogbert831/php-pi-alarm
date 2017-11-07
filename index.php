@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta http-equiv="refresh" content="60">
+        <meta http-equiv="refresh" content="30">
         <title>Raspberry Pi Gpio on Dev</title>
         <style>
         	.img-valign {
@@ -13,6 +13,10 @@
         	}
         	.text {
         		font-size: 30px;
+        	}
+        	.button {
+        		width: 80px;
+        		height: 60px;
         	}
         	/* The switch - the box around the slider */
 			.switch {
@@ -83,18 +87,25 @@
     </head>
  
     <body style="background-color: black;">
-    <div style="color:white;">
+    <div style="color:white; margin-left: 10%;">
     <img align="right;">
     <div>
     <!-- On/Off button's picture -->
 	<?php
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;
+
+	require 'PHPMailer/src/Exception.php';
+	require 'PHPMailer/src/PHPMailer.php';
+	require 'PHPMailer/src/SMTP.php';
+
 	$file = "status";
-	$handle = fopen($file, "r+");
+	$handle = fopen($file, "r");
 	$contents = fread($handle, filesize($file));
 	if ($contents == 1) {
 		//turn slider on
 		$armed = true;
-	}
+	}	
 	else {
 		//turn slider off
 		$armed = false;
@@ -118,8 +129,33 @@
 		//if off
 		if ($status[$i] == 0 ) {
 			echo ("<span class='text'>$zones[$i]</span><img class='img-valign' src='data/img/red/red.jpg'/></br>");
-			//print_r($status[$i]);
+			if ($armed == true){
+				$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+				try {
+				    //Server settings
+				    $mail->SMTPDebug = 0;                                 // Enable verbose debug output
+				    $mail->isSMTP();                                      // Set mailer to use SMTP
+				    $mail->Host = 'smtp.gmail.com';
+				    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+				    $mail->Username = 'mcarduino831@gmail.com';
+				    $mail->Password = 'ema!lservers$uck';
+				    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+				    $mail->Port = 587;                                    // TCP port to connect to
+
+				    $mail->setFrom('alarmpi@nwcybernet.com', 'Security Alarm');
+				    $mail->addAddress('miclarke@nwcybernet.com');
+				    $mail->Subject = 'Test';
+				    $mail->Body = 'This is a test from your alarm system. ' . $zones[$i] . ' is open.';
+
+				    $mail->send();
+				    echo 'Message sent</br>';
+				} catch (Exception $e) {
+				    echo 'Message could not be sent.';
+				    echo 'Mailer Error: ' . $mail->ErrorInfo;
+				}
+			}
 		}
+	
 		//if on
 		if ($status[$i] == 1 ) {
 			echo ("<span class='text'>$zones[$i]</span><img class='img-valign' src='data/img/green/green.jpg'/></br>");
@@ -135,8 +171,8 @@
   		<input id="alarmset" type="checkbox" name="status" <?php if ($armed == 'true') echo "checked='checked'"; ?> >
   		<span class="slider round"></span>
 		</label>
-		</br>
-		<input type="submit" value="Submit">
+		</br></br></br>
+		<input class="button" type="submit" value="Submit">
 		</form>
 	</div>
 	<!-- javascript -->
