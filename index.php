@@ -87,11 +87,10 @@
                     //setTimeout(loadstatus, 5000);
                 });
             }
-            setInterval(loadstatus, 5000);
             loadstatus(); // This will run on page load
-            /*setInterval(function(){
-                loadstatus() // this will run after every 5 seconds
-            }, 10000);*/
+            setInterval(loadstatus, 5000);
+            
+
     	</script>
     </head>
  
@@ -99,17 +98,10 @@
     <div style="color:white; margin-left: 10%;">
     <img align="right;">
     <div id="status">
-    <!-- On/Off button's picture -->
 	<?php
-	use PHPMailer\PHPMailer\PHPMailer;
-	use PHPMailer\PHPMailer\Exception;
 
-	require 'PHPMailer/src/Exception.php';
-	require 'PHPMailer/src/PHPMailer.php';
-	require 'PHPMailer/src/SMTP.php';
-	require 'data/helper.php';
 
-	$file = "status";
+	$file = "armed";
 	$handle = fopen($file, "r");
 	$contents = fread($handle, filesize($file));
 	if ($contents == 1) {
@@ -121,34 +113,6 @@
 		$armed = false;
 	}
 	fclose($handle);
-    
-			if ($armed == true){
-				$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
-				try {
-				    //Server settings
-				    $mail->SMTPDebug = 0;                                 // Enable verbose debug output
-				    $mail->isSMTP();                                      // Set mailer to use SMTP
-				    $mail->Host = 'smtp.gmail.com';
-				    $mail->SMTPAuth = true;                               // Enable SMTP authentication
-				    $mail->Username = $uname;
-				    $mail->Password = $pass;
-				    $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-				    $mail->Port = 587;                                    // TCP port to connect to
-
-				    $mail->setFrom($from, 'Security Alarm');
-				    $mail->addAddress($to);
-				    $mail->Subject = 'Test';
-				    $mail->Body = 'This is a test from your alarm system. ' . $zones[$i] . ' is open.';
-
-				    $mail->send();
-				    echo 'Message sent</br>';
-				} catch (Exception $e) {
-				    echo 'Message could not be sent.';
-				    echo 'Mailer Error: ' . $mail->ErrorInfo;
-				}
-			}
-		
-	
 	
 	?>
 	</div> 
