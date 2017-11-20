@@ -2,7 +2,7 @@
 
 <meta http-equiv="refresh" content="5;url=http://devpi.nwc/" />
 <?php
-$file = "status";
+$file = "armed";
 //if (is_writable($file)) echo "file is writable";
 $handle = fopen($file, "r+");
 echo $contents;

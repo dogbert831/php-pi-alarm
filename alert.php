@@ -21,7 +21,6 @@
 	}
 	fclose($handle);
 	$zones = array("Front/Garage Door", "Liv Rm Window", "Family Rm Window", "Front BR Window");
-	$db = new mysqli("localhost", "root", "ern572", "alarm");
     if ($db->connect_errno) {
         echo "Failed to connect to MySQL: " . $mysqli->connect_error;
 

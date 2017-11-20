@@ -87,7 +87,7 @@
                     //setTimeout(loadstatus, 5000);
                 });
             }
-            loadstatus(); // This will run on page load
+            
             setInterval(loadstatus, 5000);
             
 
@@ -98,6 +98,9 @@
     <div style="color:white; margin-left: 10%;">
     <img align="right;">
     <div id="status">
+    <script>
+    	loadstatus(); // This will run on page load
+    </script>
 	<?php
 
 

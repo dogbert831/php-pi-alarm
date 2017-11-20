@@ -9,30 +9,37 @@
  
     <body style="background-color: white;">
         <div id="status">
-    <!-- On/Off button's picture -->
+
     <?php
+    require 'data/helper.php';
+    if ($db->connect_errno) {
+        echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+    }
     $zones = array("Front/Garage Door", "Liv Rm Window", "Family Rm Window", "Front BR Window");
     for ( $i= 0; $i<4; $i++) {
         exec ("gpio read ".$i, $status, $return );
-        //print_r($status);
-        //unset($status);
+
     }
-    
-    //for loop to read the value
-    $i =0;
+
     for ($i = 0; $i < 4; $i++) {
         //if off
         if ($status[$i] == 0 ) {
             echo ("<span class='text'>$zones[$i]</span><img class='img-valign' src='data/img/red/red.jpg'/></br>");
-            
+            $sql = "UPDATE status SET status = 0, last_update = now() WHERE zone = $i";
+            if (mysqli_query($db, $sql)) {
+
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($db);
+            }
         }
     
         //if on
-        if ($status[$i] == 1 ) {
+        else if ($status[$i] == 1 ) {
             echo ("<span class='text'>$zones[$i]</span><img class='img-valign' src='data/img/green/green.jpg'/></br>");
-            //print_r($status[$i]);
+
         }    
     }
+    $db->close();
     ?>
     </div>
 
